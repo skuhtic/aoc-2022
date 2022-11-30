@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 import java.io.File
 import java.math.BigInteger
 import java.security.MessageDigest
@@ -7,6 +9,11 @@ import java.security.MessageDigest
  */
 fun readInput(name: String) = File("src", "$name.txt")
     .readLines()
+
+/**
+ * Gets lines from the given formatted input string.
+ */
+val String.readInput get() = this.trimMargin().lines()
 
 /**
  * Converts string to md5 hash.
