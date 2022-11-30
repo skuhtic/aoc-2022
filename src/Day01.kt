@@ -1,17 +1,34 @@
 fun main() {
-    fun part1(input: List<String>): Int {
-        return input.size
+
+    class Day01 : Day() {
+        override fun part1(input: InputData): Int {
+            log("Test")
+            return input.first().toInt()
+        }
+
+        override fun part2(input: InputData): Int {
+            return input.sumOf { it.toInt() }
+        }
+
     }
 
-    fun part2(input: List<String>): Int {
-        return input.size
-    }
+    val day = Day01()
 
-    // test if implementation meets criteria from the description, like:
-    val testInput = readInput("Day01_test")
-    check(part1(testInput) == 1)
+    day.checkPart1(199, test1)
+    day.checkPart2(2256, test1)
 
-    val input = readInput("Day01")
-    println(part1(input))
-    println(part2(input))
+    day.runPart1("day01_part1")
+    day.runPart2("day01_part1")
 }
+
+val test1 = """
+199
+200
+208
+210
+200
+207
+240
+269
+260
+263""".readInput
