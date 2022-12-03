@@ -11,7 +11,7 @@ ttgJtRGJQctTZtZT
 CrZsJsPPZsGzwwsLwLmpwMDw""".readInput
 
         override fun part1(input: InputData): Int = input
-            .map { line -> line.splitBySize(2).map { it.toSet() } }
+            .map { line -> line.splitBySizeExact(2).map { it.toSet() } }
             .map { it.intersectSoloElementOrNull ?: error("Invalid input") }
             .sumOf { it.priority }
 
@@ -31,11 +31,14 @@ CrZsJsPPZsGzwwsLwLmpwMDw""".readInput
 
 }
 
-fun String.splitBySize(noOfParts: Int) = (this.length / noOfParts).let {
-    listOf(this.take(it), this.drop(it))
+fun String.splitBySizeExact(noOfParts: Int): List<String> = (length / noOfParts).let { partLength ->
+    require(length == noOfParts * partLength) { "String not dividable to $noOfParts parts with same size" }
+    buildList {
+        repeat(noOfParts) { part -> add(this@splitBySizeExact.drop(partLength * part).take(partLength)) }
+    }
 }
 
-val <T> List<Set<T>>.intersectSoloElementOrNull
+val <T> List<Set<T>>.intersectSoloElementOrNull: T?
     get() = this.reduce { acc, items ->
         acc.intersect(items)
     }.let {
