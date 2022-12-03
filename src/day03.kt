@@ -11,29 +11,14 @@ ttgJtRGJQctTZtZT
 CrZsJsPPZsGzwwsLwLmpwMDw""".readInput
 
         override fun part1(input: InputData): Int = input
-            .map { line ->
-                line.length.let { line.take(it / 2).toSet() to line.drop(it / 2).toSet() }
-            }.map { (first, second) ->
-                first.intersect(second).let {
-                    when (it.size) {
-                        1 -> it.first()
-                        else -> error("Invalid input")
-                    }
-                }
-            }.sumOf { it.priority }
+            .map { line -> line.splitBySize(2).map { it.toSet() } }
+            .map { it.intersectSoloElementOrNull ?: error("Invalid input") }
+            .sumOf { it.priority }
 
-        override fun part2(input: InputData): Int = input
-            .chunked(3) {
-                Triple(it[0].toSet(), it[1].toSet(), it[2].toSet())
-            }
-            .map { (first, second, third) ->
-                first.intersect(second).intersect(third).let {
-                    when (it.size) {
-                        1 -> it.first()
-                        else -> error("Invalid input")
-                    }
-                }
-            }.sumOf { it.priority }
+        override fun part2(input: InputData): Int = input.map { it.toSet() }
+            .chunked(3)
+            .map { it.intersectSoloElementOrNull ?: error("Invalid input") }
+            .sumOf { it.priority }
 
         val Char.priority
             get() = when {
@@ -42,15 +27,20 @@ CrZsJsPPZsGzwwsLwLmpwMDw""".readInput
                 else -> error("Invalid input")
             }
 
-    }.execute(onlyTests = true)
+    }.execute()
 
 }
 
-fun List<Set<Char>>.intersectSoloElement() = this.reduce { acc, items ->
-    acc.intersect(items)
-}.let {
-    when (it.size) {
-        1 -> it.first()
-        else -> error("Invalid input")
+fun String.splitBySize(noOfParts: Int) = (this.length / noOfParts).let {
+    listOf(this.take(it), this.drop(it))
+}
+
+val <T> List<Set<T>>.intersectSoloElementOrNull
+    get() = this.reduce { acc, items ->
+        acc.intersect(items)
+    }.let {
+        when (it.size) {
+            1 -> it.first()
+            else -> null
+        }
     }
-}

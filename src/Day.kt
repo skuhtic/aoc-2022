@@ -1,9 +1,8 @@
-
-
 typealias InputData = List<String>
 
-abstract class Day(day: Int, private val expectedPart1: Int, private val expectedPart2: Int? = null) {
+abstract class Day(day: Int, private val expectedPart1: Int, private val expectedPart2: Int?) {
     private val dayTxt = if (day < 10) "0$day" else "$day"
+
     init {
         require(day in 1..25) { "Day should be in range from 01 to 25" }
     }
@@ -49,15 +48,19 @@ abstract class Day(day: Int, private val expectedPart1: Int, private val expecte
 
     private fun runPart2(inputTxtFile: String = "day$dayTxt") = runPart2(readInput(inputTxtFile))
 
-    fun execute(onlyWithRealData: Boolean = false) {
-        if (expectedPart2 == null) {
-            if(!onlyWithRealData) checkPart1(expectedPart1)
-            runPart1()
-            return
+    fun execute(onlyTests: Boolean = false, onlyRealData: Boolean = false, forceBothParts: Boolean = false) {
+        if(expectedPart2 == null || forceBothParts) {
+            if (!onlyRealData) checkPart1(expectedPart1)
+            if (!onlyTests) runPart1()
         }
-        if(!onlyWithRealData) checkPart2(expectedPart2)
-        runPart2()
+        if (expectedPart2 != null) {
+            if (!onlyRealData) checkPart2(expectedPart2)
+            if (!onlyTests) runPart2()
+        } else if (forceBothParts) error("No expected value for part 2")
     }
+
+    @Suppress("unused")
+    fun <T: Any> T.logIt() = this.also { log(it) }
 
     companion object {
         const val separator = "---------------------------------------------"
@@ -70,9 +73,15 @@ abstract class Day(day: Int, private val expectedPart1: Int, private val expecte
             println("Part$part check ok! Result: $result")
         }
 
-        private fun check(block: (lines: List<String>) -> Int, expected: Int, input: List<String>, partNo: Int? = null) =
+        private fun check(
+            block: (lines: List<String>) -> Int,
+            expected: Int,
+            input: List<String>,
+            partNo: Int? = null
+        ) =
             check(expected, partNo) { block(input) }
 
     }
 }
+
 

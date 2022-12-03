@@ -1,8 +1,6 @@
 fun main() {
 
     object : Day(2, 15, 12) {
-        private val heCode = 'A'.code
-        private val weCode = 'X'.code
 
         override val testInput: InputData
             get() = """
@@ -11,38 +9,33 @@ B X
 C Z""".readInput
 
         override fun part1(input: InputData): Int = input
-            .map { round ->
-                round.split(' ').let { it.first()[0].code - heCode to it.last()[0].code - weCode }
-            }
-//            .also { log(it) }
-            .fold(0) { s, (he, we) ->
+            .map { it.parseRound() }
+            .fold(0) { score, (theirHand, ourHand) ->
                 when {
-                    he == we -> 3
-                    (he + 1).mod(3) == we -> 6
-                    he == (we + 1).mod(3) -> 0
+                    theirHand == ourHand -> 3
+                    (theirHand + 1).mod(3) == ourHand -> 6
+                    theirHand == (ourHand + 1).mod(3) -> 0
                     else -> error("Invalid input")
-                }.let { win ->
-                    s + win + we + 1
+                }.let { winScore ->
+                    score + winScore + ourHand + 1
                 }
             }
 
         override fun part2(input: InputData): Int = input
-            .map { round ->
-                round.split(' ').let { it.first()[0].code - heCode to it.last()[0].code - weCode }
-            }
-//            .also { log(it) }
-            .fold(0) { s, (he, outcome) ->
+            .map { it.parseRound() }
+            .fold(0) { score, (theirHand, outcome) ->
                 when (outcome) {
-                    0 -> (he - 1).let { if (it < 0) it + 3 else it }
-                    1 -> he
-                    2 -> (he + 1).mod(3)
+                    0 -> (theirHand - 1).let { if (it < 0) it + 3 else it }
+                    1 -> theirHand
+                    2 -> (theirHand + 1).mod(3)
                     else -> error("Invalid input")
-                }.let { we ->
-                    val win = outcome * 3
-                    s + win + we + 1
+                }.let { ourHand ->
+                    val winScore = outcome * 3
+                    score + winScore + ourHand + 1
                 }
-//                    .also { log(it) }
             }
+
+        fun String.parseRound() = split(' ').let { it.first()[0] - 'A' to it.last()[0] - 'X' }
 
     }.execute()
 
