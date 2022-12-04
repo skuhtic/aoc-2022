@@ -2,20 +2,24 @@ fun main() {
 
     object : Day(3, 157, 70) {
 
+        @Suppress("SpellCheckingInspection")
         override val testInput: InputData
-            get() = """vJrwpWtwJgWrhcsFMMfFFhFp
-jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL
-PmmdzqPrVvPwwTWBwg
-wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn
-ttgJtRGJQctTZtZT
-CrZsJsPPZsGzwwsLwLmpwMDw""".readInput
+            get() = """
+                vJrwpWtwJgWrhcsFMMfFFhFp
+                jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL
+                PmmdzqPrVvPwwTWBwg
+                wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn
+                ttgJtRGJQctTZtZT
+                CrZsJsPPZsGzwwsLwLmpwMDw
+            """.trimIndent().lines()
 
         override fun part1(input: InputData): Int = input
-            .map { line -> line.splitBySizeExact(2).map { it.toSet() } }
+            .map { line -> line.splitIntoPartsExact(2).map { it.toSet() } }
             .map { it.intersectSoloElementOrNull ?: error("Invalid input") }
             .sumOf { it.priority }
 
-        override fun part2(input: InputData): Int = input.map { it.toSet() }
+        override fun part2(input: InputData): Int = input
+            .map { it.toSet() }
             .chunked(3)
             .map { it.intersectSoloElementOrNull ?: error("Invalid input") }
             .sumOf { it.priority }
@@ -27,23 +31,14 @@ CrZsJsPPZsGzwwsLwLmpwMDw""".readInput
                 else -> error("Invalid input")
             }
 
-    }.execute()
+    }.execute(onlyTests = false, forceBothParts = true)
 
 }
 
-fun String.splitBySizeExact(noOfParts: Int): List<String> = (length / noOfParts).let { partLength ->
-    require(length == noOfParts * partLength) { "String not dividable to $noOfParts parts with same size" }
-    buildList {
-        repeat(noOfParts) { part -> add(this@splitBySizeExact.drop(partLength * part).take(partLength)) }
-    }
+fun String.splitIntoPartsExact(noOfParts: Int): List<String> = (length / noOfParts).let { partLength ->
+    require(length == noOfParts * partLength) { "String not splittable into $noOfParts parts with same size" }
+    chunked(partLength)
 }
 
 val <T> List<Set<T>>.intersectSoloElementOrNull: T?
-    get() = this.reduce { acc, items ->
-        acc.intersect(items)
-    }.let {
-        when (it.size) {
-            1 -> it.first()
-            else -> null
-        }
-    }
+    get() = this.reduce { acc, items -> acc.intersect(items) }.singleOrNull()

@@ -4,31 +4,32 @@ fun main() {
 
         override val testInput: InputData
             get() = """
-1000
-2000
-3000
+                1000
+                2000
+                3000
+                
+                4000
+                
+                5000
+                6000
+                
+                7000
+                8000
+                9000
+                
+                10000
+            """.trimIndent().lines()
 
-4000
+        override fun part1(input: InputData): Int = input
+            .splitByEmpty()
+            .maxOf { elf -> elf.sumOf { it.toInt() } }
 
-5000
-6000
-
-7000
-8000
-9000
-
-10000""".readInput
-
-        override fun part1(input: InputData): Int = input.splitByEmpty()
-            .maxOf { elf ->
-                elf.sumOf { it.toInt() }
-            }
-
-        override fun part2(input: InputData): Int = input.splitByEmpty()
+        override fun part2(input: InputData): Int = input
+            .splitByEmpty()
             .map { e -> e.sumOf { it.toInt() } }
             .sortedDescending().take(3).sum()
 
-    }.execute()
+    }.execute(forceBothParts = true)
 
 }
 

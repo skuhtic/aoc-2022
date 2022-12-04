@@ -4,9 +4,10 @@ fun main() {
 
         override val testInput: InputData
             get() = """
-A Y
-B X
-C Z""".readInput
+                        A Y
+                        B X
+                        C Z
+                    """.trimIndent().lines()
 
         override fun part1(input: InputData): Int = input
             .map { it.parseRound() }
@@ -37,6 +38,6 @@ C Z""".readInput
 
         fun String.parseRound() = split(' ').let { it.first()[0] - 'A' to it.last()[0] - 'X' }
 
-    }.execute()
+    }.execute(forceBothParts = true)
 
 }
