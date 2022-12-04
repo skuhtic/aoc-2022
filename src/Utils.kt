@@ -7,17 +7,18 @@ import java.security.MessageDigest
 /**
  * Reads lines from the given input txt file.
  */
-fun readInput(name: String) = File("src", "$name.txt")
+fun readInput(name: String): List<String> = File("src/inputs", "$name.txt")
     .readLines()
 
 /**
  * Gets lines from the given formatted input string.
  */
-val String.readInput get() = this.trimMargin().lines()
+@Deprecated("Not helpful", ReplaceWith("trimIndent().lines()"), DeprecationLevel.WARNING)
+val String.readInput: List<String> get() = trimIndent().lines()
 
 /**
  * Converts string to md5 hash.
  */
-fun String.md5() = BigInteger(1, MessageDigest.getInstance("MD5").digest(toByteArray()))
+fun String.md5(): String = BigInteger(1, MessageDigest.getInstance("MD5").digest(toByteArray()))
     .toString(16)
     .padStart(32, '0')

@@ -1,3 +1,7 @@
+import kotlin.time.DurationUnit
+import kotlin.time.ExperimentalTime
+import kotlin.time.measureTimedValue
+
 typealias InputData = List<String>
 
 abstract class Day(day: Int, private val expectedPart1: Int, private val expectedPart2: Int?) {
@@ -7,6 +11,7 @@ abstract class Day(day: Int, private val expectedPart1: Int, private val expecte
         require(day in 1..25) { "Day should be in range from 01 to 25" }
     }
 
+    @Suppress("SpellCheckingInspection")
     abstract val testInput: InputData
 
     abstract fun part1(input: InputData): Int
@@ -26,10 +31,18 @@ abstract class Day(day: Int, private val expectedPart1: Int, private val expecte
         check(::part2, expectedPart, input, 2)
     }
 
+    @OptIn(ExperimentalTime::class)
+    private fun <T, R> runMeasured(input: T, block: (T) -> R) = measureTimedValue {
+        block(input)
+    }.let { (result, duration) ->
+        println("Execution duration: ${duration.toString(DurationUnit.SECONDS, 4)}")
+        result
+    }
+
     private fun runPart1(input: InputData) = try {
         println(separator)
         println("START FOR PART 1")
-        val result = part1(input)
+        val result = runMeasured(input, ::part1) //part1(input)
         println("RESULT FOR PART 1: $result")
     } catch (ex: NotImplementedError) {
         println("PART 1 NOT IMPLEMENTED")
@@ -40,7 +53,7 @@ abstract class Day(day: Int, private val expectedPart1: Int, private val expecte
     private fun runPart2(input: InputData) = try {
         println(separator)
         println("START FOR PART 2")
-        val result = part2(input)
+        val result = runMeasured(input, ::part2) //part2(input)
         println("RESULT FOR PART 2: $result")
     } catch (ex: NotImplementedError) {
         println("PART 2 NOT IMPLEMENTED")
@@ -49,7 +62,7 @@ abstract class Day(day: Int, private val expectedPart1: Int, private val expecte
     private fun runPart2(inputTxtFile: String = "day$dayTxt") = runPart2(readInput(inputTxtFile))
 
     fun execute(onlyTests: Boolean = false, onlyRealData: Boolean = false, forceBothParts: Boolean = false) {
-        if(expectedPart2 == null || forceBothParts) {
+        if (expectedPart2 == null || forceBothParts) {
             if (!onlyRealData) checkPart1(expectedPart1)
             if (!onlyTests) runPart1()
         }
@@ -60,7 +73,7 @@ abstract class Day(day: Int, private val expectedPart1: Int, private val expecte
     }
 
     @Suppress("unused")
-    fun <T: Any> T.logIt() = this.also { log(it) }
+    fun <T : Any> T.logIt(): T = this.also { log(it) }
 
     companion object {
         const val separator = "---------------------------------------------"
