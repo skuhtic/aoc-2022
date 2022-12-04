@@ -11,16 +11,18 @@ fun main() {
                 2-6,4-8
             """.trimIndent().lines()
 
-        override fun part1(input: InputData): Int = input.fold(0) { cnt, line ->
-            line.split(',').let { (first, last) -> first.getRange() to last.getRange() }
-                .let { (first, last) -> if (first.contains(last) || last.contains(first)) cnt + 1 else cnt }
-        }
-
-        override fun part2(input: InputData): Int = input.fold(0) { cnt, line ->
-            line.split(',').let { (first, last) ->
-                if (first.getRange().intersect(last.getRange()).isNotEmpty()) cnt + 1 else cnt
+        override fun part1(input: InputData): Int = input
+            .fold(0) { cnt, line ->
+                line.split(',').let { (first, last) -> first.getRange() to last.getRange() }
+                    .let { (first, last) -> if (first.contains(last) || last.contains(first)) cnt + 1 else cnt }
             }
-        }
+
+        override fun part2(input: InputData): Int = input
+            .fold(0) { cnt, line ->
+                line.split(',').let { (first, last) ->
+                    if (first.getRange().intersect(last.getRange()).isNotEmpty()) cnt + 1 else cnt
+                }
+            }
 
     }.execute(onlyTests = true, forceBothParts = true)
 

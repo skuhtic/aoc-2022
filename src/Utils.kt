@@ -13,7 +13,7 @@ fun readInput(name: String): List<String> = File("src/inputs", "$name.txt")
 /**
  * Gets lines from the given formatted input string.
  */
-@Deprecated("Not helpful", ReplaceWith("trimIndent().lines()"), DeprecationLevel.WARNING)
+@Deprecated("Not helpful because of IDE behaviour with pasting data", ReplaceWith("trimIndent().lines()"), DeprecationLevel.WARNING)
 val String.readInput: List<String> get() = trimIndent().lines()
 
 /**

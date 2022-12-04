@@ -13,12 +13,12 @@ fun main() {
                 CrZsJsPPZsGzwwsLwLmpwMDw
             """.trimIndent().lines()
 
-        override fun part1(input: InputData): Int = input
+        override fun part1(input: InputData): Int = input.asSequence()
             .map { line -> line.splitIntoPartsExact(2).map { it.toSet() } }
             .map { it.intersectSoloElementOrNull ?: error("Invalid input") }
             .sumOf { it.priority }
 
-        override fun part2(input: InputData): Int = input
+        override fun part2(input: InputData): Int = input.asSequence()
             .map { it.toSet() }
             .chunked(3)
             .map { it.intersectSoloElementOrNull ?: error("Invalid input") }
