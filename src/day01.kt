@@ -1,9 +1,10 @@
 fun main() {
+    day01.execute(forceBothParts = true)
+}
 
-    object : Day(1, 24000, 45000) {
-
-        override val testInput: InputData
-            get() = """
+val day01 = object : Day<Int>(1, 24000, 45000) {
+    override val testInput: InputData
+        get() = """
                 1000
                 2000
                 3000
@@ -20,17 +21,14 @@ fun main() {
                 10000
             """.trimIndent().lines()
 
-        override fun part1(input: InputData): Int = input
-            .splitByEmpty()
-            .maxOf { elf -> elf.sumOf { it.toInt() } }
+    override fun part1(input: InputData): Int = input
+        .splitByEmpty()
+        .maxOf { elf -> elf.sumOf { it.toInt() } }
 
-        override fun part2(input: InputData): Int = input
-            .splitByEmpty()
-            .map { e -> e.sumOf { it.toInt() } }
-            .sortedDescending().take(3).sum()
-
-    }.execute(forceBothParts = true)
-
+    override fun part2(input: InputData): Int = input
+        .splitByEmpty()
+        .map { e -> e.sumOf { it.toInt() } }
+        .sortedDescending().take(3).sum()
 }
 
 fun InputData.splitByEmpty(): List<List<String>> = this.flatMapIndexed { i, s ->

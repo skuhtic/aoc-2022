@@ -1,8 +1,10 @@
 fun main() {
+    day04.execute(onlyTests = true, forceBothParts = true)
+}
 
-    object : Day(4, 2, 4) {
-        override val testInput: InputData
-            get() = """
+val day04 = object : Day<Int>(4, 2, 4) {
+    override val testInput: InputData
+        get() = """
                 2-4,6-8
                 2-3,4-5
                 5-7,7-9
@@ -11,20 +13,19 @@ fun main() {
                 2-6,4-8
             """.trimIndent().lines()
 
-        override fun part1(input: InputData): Int = input
-            .fold(0) { cnt, line ->
-                line.split(',').let { (first, last) -> first.getRange() to last.getRange() }
-                    .let { (first, last) -> if (first.contains(last) || last.contains(first)) cnt + 1 else cnt }
-            }
+    override fun part1(input: InputData) = input
+        .fold(0) { cnt, line ->
+            line.split(',').let { (first, last) -> first.getRange() to last.getRange() }
+                .let { (first, last) -> if (first.contains(last) || last.contains(first)) cnt + 1 else cnt }
+        }
 
-        override fun part2(input: InputData): Int = input
-            .fold(0) { cnt, line ->
-                line.split(',').let { (first, last) ->
-                    if (first.getRange().intersect(last.getRange()).isNotEmpty()) cnt + 1 else cnt
-                }
+    override fun part2(input: InputData) = input
+        .fold(0) { cnt, line ->
+            line.split(',').let { (first, last) ->
+                if ((first.getRange() intersect last.getRange()).isNotEmpty())
+                    cnt + 1 else cnt
             }
-
-    }.execute(onlyTests = true, forceBothParts = true)
+        }
 
 }
 
@@ -32,4 +33,3 @@ fun String.getRange(separator: Char = '-'): IntRange =
     split(separator).let { (start, end) -> start.toInt()..end.toInt() }
 
 fun IntRange.contains(other: IntRange) = contains(other.first) && contains(other.last)
-

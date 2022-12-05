@@ -4,7 +4,7 @@ import kotlin.time.measureTimedValue
 
 typealias InputData = List<String>
 
-abstract class Day(day: Int, private val expectedPart1: Int, private val expectedPart2: Int?) {
+abstract class Day<T>(day: Int, private val expectedPart1: T, private val expectedPart2: T?) {
     private val dayTxt = if (day < 10) "0$day" else "$day"
 
     init {
@@ -14,30 +14,23 @@ abstract class Day(day: Int, private val expectedPart1: Int, private val expecte
     @Suppress("SpellCheckingInspection")
     abstract val testInput: InputData
 
-    abstract fun part1(input: InputData): Int
+    abstract fun part1(input: InputData): T
 
-    abstract fun part2(input: InputData): Int
+    abstract fun part2(input: InputData): T
 
     @Suppress("unused", "SameParameterValue")
     protected open fun log(item: Any) = println("  day$dayTxt: $item")
 
-    private fun checkPart1(expectedPart: Int, input: InputData = testInput) {
+    private fun checkPart1(expectedPart: T, input: InputData = testInput) {
         println(separator)
         check(::part1, expectedPart, input, 1)
     }
 
-    private fun checkPart2(expectedPart: Int, input: InputData = testInput) {
+    private fun checkPart2(expectedPart: T, input: InputData = testInput) {
         println(separator)
         check(::part2, expectedPart, input, 2)
     }
 
-    @OptIn(ExperimentalTime::class)
-    private fun <T, R> runMeasured(input: T, block: (T) -> R) = measureTimedValue {
-        block(input)
-    }.let { (result, duration) ->
-        println("Execution duration: ${duration.toString(DurationUnit.SECONDS, 4)}")
-        result
-    }
 
     private fun runPart1(input: InputData) = try {
         println(separator)
@@ -73,26 +66,40 @@ abstract class Day(day: Int, private val expectedPart1: Int, private val expecte
     }
 
     @Suppress("unused")
-    fun <T : Any> T.logIt(): T = this.also { log(it) }
+    fun <T : Any> T.logIt(prefix: String = ""): T = this.also { log("$prefix: $it") }
 
     companion object {
         const val separator = "---------------------------------------------"
 
-        private fun check(expected: Int, partNo: Int? = null, block: () -> Int) {
-            val part = partNo?.let { " $it" } ?: ""
+//        private fun check(expected: Any, partNo: Int, block: () -> Any) {
+//            val part = partNo?.let { " $it" } ?: ""
+//            println("Checking part$part")
+//            val result = block()
+//            check(expected == result) { "Part$part check failed! Expected $expected but got $result" }
+//            println("Part$part check ok! Result: $result")
+//        }
+
+        private fun <T> check(
+            block: (lines: List<String>) -> T,
+            expected: T,
+            input: List<String>,
+            partNo: Int
+        ) {
+            val part = partNo.let { " $it" }
             println("Checking part$part")
-            val result = block()
+            val result = runMeasured(input, block) //block(input)
+            println("Result: $result")
             check(expected == result) { "Part$part check failed! Expected $expected but got $result" }
-            println("Part$part check ok! Result: $result")
+            println("Part$part check ok!")
         }
 
-        private fun check(
-            block: (lines: List<String>) -> Int,
-            expected: Int,
-            input: List<String>,
-            partNo: Int? = null
-        ) =
-            check(expected, partNo) { block(input) }
+        @OptIn(ExperimentalTime::class)
+        private fun <T, R> runMeasured(input: T, block: (T) -> R) = measureTimedValue {
+            block(input)
+        }.let { (result, duration) ->
+            println("Execution duration: ${duration.toString(DurationUnit.SECONDS, 4)}")
+            result
+        }
 
     }
 }
