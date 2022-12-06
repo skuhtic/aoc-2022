@@ -1,5 +1,5 @@
 fun main() {
-    val onlyTests = true
+    val onlyTests = false
     val forceBothParts = true
 
     listOf(
@@ -8,7 +8,11 @@ fun main() {
         day03,
         day04,
         day05,
+        day06,
     ).forEach {
-        it.execute(onlyTests = onlyTests, forceBothParts = forceBothParts)
+        it.execute(
+            onlyTests = onlyTests,
+            onlyRealData = !onlyTests,
+            forceBothParts = forceBothParts)
     }
 }

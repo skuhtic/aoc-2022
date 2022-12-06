@@ -4,7 +4,11 @@ import kotlin.time.measureTimedValue
 
 typealias InputData = List<String>
 
-abstract class Day<T>(day: Int, private val expectedPart1: T, private val expectedPart2: T?) {
+abstract class Day<T>(
+    @Suppress("MemberVisibilityCanBePrivate") val day: Int,
+    private val expectedPart1: T,
+    private val expectedPart2: T?
+) {
     private val dayTxt = if (day < 10) "0$day" else "$day"
 
     init {
@@ -30,7 +34,6 @@ abstract class Day<T>(day: Int, private val expectedPart1: T, private val expect
         println(separator)
         check(::part2, expectedPart, input, 2)
     }
-
 
     private fun runPart1(input: InputData) = try {
         println(separator)
@@ -70,14 +73,6 @@ abstract class Day<T>(day: Int, private val expectedPart1: T, private val expect
 
     companion object {
         const val separator = "---------------------------------------------"
-
-//        private fun check(expected: Any, partNo: Int, block: () -> Any) {
-//            val part = partNo?.let { " $it" } ?: ""
-//            println("Checking part$part")
-//            val result = block()
-//            check(expected == result) { "Part$part check failed! Expected $expected but got $result" }
-//            println("Part$part check ok! Result: $result")
-//        }
 
         private fun <T> check(
             block: (lines: List<String>) -> T,
