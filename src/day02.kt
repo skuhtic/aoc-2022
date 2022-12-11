@@ -3,12 +3,11 @@ fun main() {
 }
 
 val day02 = object : Day<Int>(2, 15, 12) {
-    override val testInput: InputData
-        get() = """
-                        A Y
-                        B X
-                        C Z
-                    """.trimIndent().lines()
+    override val testInput: InputData = """
+        A Y
+        B X
+        C Z
+    """.trimIndent().lines()
 
     override fun part1(input: InputData): Int = input
         .fold(0) { score, line ->

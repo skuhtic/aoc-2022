@@ -26,17 +26,17 @@ abstract class Day<T>(
     protected open fun log(item: Any) = println("  day$dayTxt: $item")
 
     private fun checkPart1(expectedPart: T, input: InputData = testInput) {
-        println(separator)
+        println(separatorDay)
         check(::part1, expectedPart, input, 1)
     }
 
     private fun checkPart2(expectedPart: T, input: InputData = testInput) {
-        println(separator)
+        println(separatorDay)
         check(::part2, expectedPart, input, 2)
     }
 
     private fun runPart1(input: InputData) = try {
-        println(separator)
+        println(separatorDay)
         println("START FOR PART 1")
         val result = runMeasured(input, ::part1) //part1(input)
         println("RESULT FOR PART 1: $result")
@@ -47,7 +47,7 @@ abstract class Day<T>(
     private fun runPart1(inputTxtFile: String = "day$dayTxt") = runPart1(readInput(inputTxtFile))
 
     private fun runPart2(input: InputData) = try {
-        println(separator)
+        println(separatorDay)
         println("START FOR PART 2")
         val result = runMeasured(input, ::part2) //part2(input)
         println("RESULT FOR PART 2: $result")
@@ -71,8 +71,10 @@ abstract class Day<T>(
     @Suppress("unused")
     fun <T : Any> T.logIt(prefix: String = ""): T = this.also { log("$prefix: $it") }
 
+    private val separatorDay = "---Day: ${dayTxt}-----------------------------------"
+
     companion object {
-        const val separator = "---------------------------------------------"
+//        const val separator = "---------------------------------------------"
 
         private fun <T> check(
             block: (lines: List<String>) -> T,

@@ -51,5 +51,8 @@ val day05 = object : Day<String>(5, "CMZ", "MCD") {
 
 }
 
-inline fun <reified T> List<List<T>>.transposedWithNullIfMissing(): List<List<T?>> =
+fun <T> List<List<T>>.transposed(): List<List<T>> =
+    List(this.maxOf { it.size }) { j -> List(this.size) { i -> this[i][j] } }
+
+fun <T> List<List<T>>.transposedWithNullIfMissing(): List<List<T?>> =
     List(this.maxOf { it.size }) { j -> List(this.size) { i -> this.getOrNull(i)?.getOrNull(j) } }
